@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	pb "gardenManagement/genproto/GardenManagementSevice/gardenManagementService"
+	pb "gardenManagement/genproto/GardenManagementService/genproto/GardenManagementService"
 	"gardenManagement/storage/postgres"
 
 	"github.com/jmoiron/sqlx"

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	pb "gardenManagement/genproto/GardenManagementSevice/gardenManagementService"
+	pb "gardenManagement/genproto/GardenManagementService/genproto/GardenManagementService"
 	"log"
 	"net"
 	"gardenManagement/config"
@@ -29,7 +29,7 @@ func GetDB(path string) (*sqlx.DB, error) {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", "localhost:50051")
+	lis, err := net.Listen("tcp", "localhost:50053")
 	if err != nil {
 		log.Fatal("Failed to listen: ", err)
 	}
@@ -44,7 +44,7 @@ func main() {
 	userManaementService := services.NewUserManagementRepo(db)
 	pb.RegisterGardenManagementServiceServer(gprcServer, userManaementService)
 
-	log.Println("gRPC server is running on port 50051")
+	log.Println("gRPC server is running on port 50053")
 	if err := gprcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

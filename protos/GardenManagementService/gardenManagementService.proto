@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "gardenManagementService/";
+option go_package = "genproto/GardenManagementService";
 
 package GardenManagementService;
 
@@ -64,6 +64,10 @@ message UpdateGardenRequest {
     string name = 3;
     string type = 4;
     float area = 5;
+}
+
+message Garden {
+        
 }
 
 message GardenResponse {

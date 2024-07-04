@@ -10,7 +10,7 @@ CREATE TYPE plant_status AS ENUM ('planned', 'planted', 'growing', 'harvesting',
 -- Create the gardens table
 CREATE TABLE IF NOT EXISTS gardens (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES users(user_id),
+    user_id UUID ,
     name VARCHAR(100) NOT NULL,
     type garden_type,
     area_sqm DECIMAL(6, 2),

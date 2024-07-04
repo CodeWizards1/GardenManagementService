@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"context"
-	pb "gardenManagement/genproto/GardenManagementSevice/gardenManagementService"
+	pb "gardenManagement/genproto/GardenManagementService/genproto/GardenManagementService"
 	"time"
 
 	"github.com/jmoiron/sqlx"

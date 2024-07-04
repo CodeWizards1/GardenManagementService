@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v3.21.12
-// source: GardenManagementSevice/gardenManagementService.proto
+// source: GardenManagementService/gardenManagementService.proto
 
-package gardenManagementService
+package GardenManagementService
 
 import (
 	context "context"
@@ -509,5 +509,5 @@ var GardenManagementService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "GardenManagementSevice/gardenManagementService.proto",
+	Metadata: "GardenManagementService/gardenManagementService.proto",
 }
