@@ -41,7 +41,10 @@ func main() {
 		log.Fatal("Failed to connect to database: ", err)
 	}
 
-	gardenManaementService := services.NewGardenManagementRepo(db)
+	gardenManaementService, err := services.NewGardenManagementRepo(db, "50052")
+	if err != nil {
+		log.Fatal("Failed to create garden management service: ", err)
+	}
 	pb.RegisterGardenManagementServiceServer(gprcServer, gardenManaementService)
 
 	log.Println("gRPC server is running on port 50053")

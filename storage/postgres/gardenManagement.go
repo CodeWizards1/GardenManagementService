@@ -143,7 +143,7 @@ func (g *GardenRepo) UpdateGardenByID(ctx context.Context, in *pb.UpdateGardenRe
 		updated_at    time.Time
 	)
 
-	row := g.db.QueryRowContext(ctx, query, in.UserId, in.Name, in.Type, in.Area, in.UserId)
+	row := g.db.QueryRowContext(ctx, query, in.UserId, in.Name, in.Type, in.Area, in.Id)
 	if err := row.Scan(
 		&gardenRespone.Id,
 		&gardenRespone.UserId,

@@ -3,18 +3,35 @@ package services
 import (
 	"context"
 	pb "gardenManagement/genproto/GardenManagementService"
+	user "gardenManagement/genproto/UserManagementService"
 	"gardenManagement/storage/postgres"
 
 	"github.com/jmoiron/sqlx"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
+func Connect(port string) (*grpc.ClientConn, error) {
+	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	return conn, nil
+}
+
 type gardenManagementRepo struct {
-	db postgres.GardenRepo
+	db         postgres.GardenRepo
+	userClient user.UserManagementServiceClient
 	pb.UnimplementedGardenManagementServiceServer
 }
 
-func NewGardenManagementRepo(db *sqlx.DB) *gardenManagementRepo {
-	return &gardenManagementRepo{db: *postgres.NewGardenRepo(db)}
+func NewGardenManagementRepo(db *sqlx.DB, userServiceAddress string) (*gardenManagementRepo, error) {
+	conn, err := Connect(userServiceAddress)
+	if err != nil {
+		return nil, err
+	}
+	userClient := user.NewUserManagementServiceClient(conn)
+	return &gardenManagementRepo{db: *postgres.NewGardenRepo(db), userClient: userClient}, nil
 }
 
 func (g *gardenManagementRepo) DoesGardenExist(ctx context.Context, in *pb.IdRequest) (*pb.DoesGardenExistResponse, error) {
@@ -28,6 +45,11 @@ func (g *gardenManagementRepo) DoesGardenExist(ctx context.Context, in *pb.IdReq
 
 // 1
 func (g *gardenManagementRepo) CreateGarden(ctx context.Context, in *pb.GardenRequest) (*pb.GardenResponse, error) {
+	_, err := g.userClient.DoesUserExists(ctx, &user.IdUserRequest{UserId: in.UserId})
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := g.db.CreateGarden(ctx, in)
 	if err != nil {
 		return nil, err
