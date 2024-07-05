@@ -1,5 +1,5 @@
 CURRENT_DIR=$(shell pwd)
-DB_URL=postgres://postgres:pass@localhost:5432/greenthumb?sslmode=disable
+DB_URL=postgres://postgres:pass@localhost:5432/garden?sslmode=disable
 
 proto-gen:
 	./scripts/gen-proto.sh ${CURRENT_DIR}
@@ -17,4 +17,4 @@ migrate_force:
 	migrate -path migrations -database ${DB_URL}  -verbose force 1
 
 migrate_file:
-	migrate create -ext sql -dir migrations -seq create_tables
+	migrate create -ext sql -dir migrations -seq insert_to_tables

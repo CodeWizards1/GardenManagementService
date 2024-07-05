@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	pb "gardenManagement/genproto/GardenManagementSevice/gardenManagementService"
+	pb "gardenManagement/genproto/GardenManagementService"
 	"gardenManagement/storage/postgres"
 
 	"github.com/jmoiron/sqlx"
@@ -13,8 +13,17 @@ type gardenManagementRepo struct {
 	pb.UnimplementedGardenManagementServiceServer
 }
 
-func NewUserManagementRepo(db *sqlx.DB) *gardenManagementRepo {
+func NewGardenManagementRepo(db *sqlx.DB) *gardenManagementRepo {
 	return &gardenManagementRepo{db: *postgres.NewGardenRepo(db)}
+}
+
+func (g *gardenManagementRepo) DoesGardenExist(ctx context.Context, in *pb.IdRequest) (*pb.DoesGardenExistResponse, error) {
+	res, err := g.db.DoesGardenExist(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
 
 // 1

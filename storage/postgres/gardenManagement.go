@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"context"
-	pb "gardenManagement/genproto/GardenManagementSevice/gardenManagementService"
+	pb "gardenManagement/genproto/GardenManagementService"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -14,6 +14,20 @@ type GardenRepo struct {
 
 func NewGardenRepo(db *sqlx.DB) *GardenRepo {
 	return &GardenRepo{db: db}
+}
+
+func (g *GardenRepo) DoesGardenExist(ctx context.Context, in *pb.IdRequest) (*pb.DoesGardenExistResponse, error) {
+	gardenID := in.GetId()
+
+	query := "SELECT EXISTS (SELECT 1 FROM gardens WHERE id = $1)"
+
+	var exists bool
+	err := g.db.QueryRowContext(ctx, query, gardenID).Scan(&exists)
+	if err != nil {
+		return &pb.DoesGardenExistResponse{Exists: false}, err
+	}
+
+	return &pb.DoesGardenExistResponse{Exists: true}, nil
 }
 
 // 1
@@ -72,7 +86,7 @@ func (g *GardenRepo) GetGardenByID(ctx context.Context, in *pb.IdRequest) (*pb.G
 			created_at,
 			updated_at
 		FROM gardens
-		WHERE id = $1 AND deleted_at IS NULL
+		WHERE id = $1 
 	`
 
 	var (

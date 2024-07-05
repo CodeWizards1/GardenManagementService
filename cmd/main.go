@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	pb "gardenManagement/genproto/GardenManagementSevice/gardenManagementService"
+	"gardenManagement/config"
+	pb "gardenManagement/genproto/GardenManagementService"
+	"gardenManagement/services"
 	"log"
 	"net"
-	"gardenManagement/config"
-	"gardenManagement/services"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -29,7 +29,7 @@ func GetDB(path string) (*sqlx.DB, error) {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", "localhost:50051")
+	lis, err := net.Listen("tcp", "localhost:50053")
 	if err != nil {
 		log.Fatal("Failed to listen: ", err)
 	}
@@ -41,10 +41,10 @@ func main() {
 		log.Fatal("Failed to connect to database: ", err)
 	}
 
-	userManaementService := services.NewUserManagementRepo(db)
-	pb.RegisterGardenManagementServiceServer(gprcServer, userManaementService)
+	gardenManaementService := services.NewGardenManagementRepo(db)
+	pb.RegisterGardenManagementServiceServer(gprcServer, gardenManaementService)
 
-	log.Println("gRPC server is running on port 50051")
+	log.Println("gRPC server is running on port 50053")
 	if err := gprcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
